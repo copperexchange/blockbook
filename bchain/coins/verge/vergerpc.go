@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 
 	"github.com/golang/glog"
+	"github.com/juju/errors"
 )
 
 // VergeRPC is an interface to JSON-RPC bitcoind service.

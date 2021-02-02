@@ -1212,7 +1212,7 @@ func (w *Worker) getAddrDescUtxo(addrDesc bchain.AddressDescriptor, ba *db.AddrB
 									AmountSat: (*Amount)(&vout.ValueSat),
 									Locktime:  bchainTx.LockTime,
 									Coinbase:  coinbase,
-									Hex:       vout.ScriptPubKey.Hex
+									Hex:       vout.ScriptPubKey.Hex,
 								})
 								inMempool[bchainTx.Txid] = struct{}{}
 							}

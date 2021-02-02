@@ -281,6 +281,7 @@ type Utxo struct {
 	Path          string  `json:"path,omitempty"`
 	Locktime      uint32  `json:"lockTime,omitempty"`
 	Coinbase      bool    `json:"coinbase,omitempty"`
+	Hex           string  `json:"hex,omitempty"`
 }
 
 // Utxos is array of Utxo

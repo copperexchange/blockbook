@@ -1261,7 +1261,7 @@ func (w *Worker) getAddrDescUtxo(addrDesc bchain.AddressDescriptor, ba *db.AddrB
 						}
 					}
 
-					tx, err := w.txFromTxid(txid, bestheight, AccountDetailsTxHistory, nil)
+					tx, err := w.txFromTxid(txid, b, AccountDetailsTxHistory, nil)
           if err != nil {
           	return nil, err
           }

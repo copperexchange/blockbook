@@ -1269,6 +1269,7 @@ func (w *Worker) getAddrDescUtxo(addrDesc bchain.AddressDescriptor, ba *db.AddrB
 							Height:        int(utxo.Height),
 							Confirmations: confirmations,
 							Coinbase:      coinbase,
+							Hex:           vout.ScriptPubKey.Hex,
 						})
 					}
 				}

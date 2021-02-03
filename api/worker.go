@@ -1265,9 +1265,7 @@ func (w *Worker) getAddrDescUtxo(addrDesc bchain.AddressDescriptor, ba *db.AddrB
           if err != nil {
           	return nil, err
           }
-          txs = append(txs, tx)
-          	}
-          }
+
 					_, e = inMempool[txid]
 					if !e {
 						utxos = append(utxos, Utxo{

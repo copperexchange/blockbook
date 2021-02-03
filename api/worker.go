@@ -1260,6 +1260,14 @@ func (w *Worker) getAddrDescUtxo(addrDesc bchain.AddressDescriptor, ba *db.AddrB
 							coinbase = true
 						}
 					}
+
+					tx, err := w.txFromTxid(txid, bestheight, AccountDetailsTxHistory, nil)
+          if err != nil {
+          	return nil, err
+          }
+          txs = append(txs, tx)
+          	}
+          }
 					_, e = inMempool[txid]
 					if !e {
 						utxos = append(utxos, Utxo{
@@ -1269,7 +1277,7 @@ func (w *Worker) getAddrDescUtxo(addrDesc bchain.AddressDescriptor, ba *db.AddrB
 							Height:        int(utxo.Height),
 							Confirmations: confirmations,
 							Coinbase:      coinbase,
-							Hex:           utxo.ScriptPubKey.Hex,
+							Hex:           tx.Vout[utxo.Vout].Hex,
 						})
 					}
 				}

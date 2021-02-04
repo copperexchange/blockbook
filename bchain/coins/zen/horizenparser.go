@@ -1,6 +1,8 @@
 package zen
 
 import (
+  "encoding/hex"
+
 	"github.com/martinboehm/btcd/wire"
 	"github.com/martinboehm/btcutil/chaincfg"
 	"github.com/trezor/blockbook/bchain"
@@ -96,7 +98,7 @@ func (p *HorizenParser) GetAddrDescFromVout(output *bchain.Vout) (bchain.Address
 		return nil, err
 	}
 
-	sc, addresses, _, err := txscript.ExtractPkScriptAddrs(script, p.Params)
+	scriptClass, addresses, _, err := txscript.ExtractPkScriptAddrs(script, p.Params)
 	if err != nil {
 	  // bip115 P2PKH
 	  pubKeyWithBlock := extractPubKeyHashWithBlock(script)

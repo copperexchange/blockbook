@@ -1,13 +1,10 @@
 package zen
 
 import (
-  "encoding/hex"
-
 	"github.com/martinboehm/btcd/wire"
 	"github.com/martinboehm/btcutil/chaincfg"
 	"github.com/trezor/blockbook/bchain"
 	"github.com/trezor/blockbook/bchain/coins/btc"
-	"github.com/martinboehm/btcutil/txscript"
 )
 
 const (
@@ -93,8 +90,8 @@ func (p *HorizenParser) UnpackTx(buf []byte) (*bchain.Tx, uint32, error) {
 
 // GetAddrDescFromVout returns internal address representation of a given transaction output.
 func (p *HorizenParser) GetAddrDescFromVout(output *bchain.Vout) (bchain.AddressDescriptor, error) {
-	if (len(output.Addresses) == 1) {
-		ad, err := p.GetAddrDescFromAddress(output.Addresses[0])
+	if (len(output.ScriptPubKey.Addresses) == 1) {
+		ad, err := p.GetAddrDescFromAddress(output.ScriptPubKey.Addresses[0])
 
 		if err != nil {
 			return ad, err

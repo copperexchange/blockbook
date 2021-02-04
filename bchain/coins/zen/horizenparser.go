@@ -93,77 +93,15 @@ func (p *HorizenParser) UnpackTx(buf []byte) (*bchain.Tx, uint32, error) {
 
 // GetAddrDescFromVout returns internal address representation of a given transaction output.
 func (p *HorizenParser) GetAddrDescFromVout(output *bchain.Vout) (bchain.AddressDescriptor, error) {
-	script, err := hex.DecodeString(output.ScriptPubKey.Hex)
-	if err != nil {
-		return nil, err
-	}
+	if (len(output.Addresses) == 1) {
+		ad, err := p.GetAddrDescFromAddress(output.Addresses[0])
 
-	scriptClass, addresses, _, err := txscript.ExtractPkScriptAddrs(script, p.Params)
-	if err != nil {
-	  // bip115 P2PKH
-	  pubKeyWithBlock := extractPubKeyHashWithBlock(script)
-
-	  if (pubKeyWithBlock != nil)  {
-	    return bchain.AddressDescriptor(pubKeyWithBlock), nil
-	  }
-
-	  // bip115 P2SH
-	  scriptKeyWithBlock := extractScriptHashWithBlock(script)
-
-	  if (scriptKeyWithBlock != nil) {
-	    return bchain.AddressDescriptor(scriptKeyWithBlock), nil
-	  }
-
-		return nil, err
-	}
-
-	if scriptClass.String() == "nulldata" {
-		if parsedOPReturn := p.BitcoinParser.TryParseOPReturn(script); parsedOPReturn != "" {
-			return []byte(parsedOPReturn), nil
+		if err != nil {
+			return ad, err
 		}
+
+		return ad, nil
 	}
 
-	var addressByte []byte
-	for i := range addresses {
-		addressByte = append(addressByte, addresses[i].String()...)
-	}
-	return bchain.AddressDescriptor(addressByte), nil
-}
-
-// extractPubKeyHashWithBlock extracts the public key hash from the passed script if it
-// is a standard pay-to-pubkey-hash script with bip115. It will return nil otherwise.
-func extractPubKeyHashWithBlock(script []byte) []byte {
-	// A pay-to-pubkey-hash script is of the form:
-	//  OP_DUP OP_HASH160 <20-byte hash> OP_EQUALVERIFY OP_CHECKSIG <32-byte block hash> <block-number> OP_CHECKBLOCKATHEIGHT
-	if len(script) > 59 &&
-		script[0] == 0x76 && // OP_DUP
-		script[1] == 0xa9 && // OP_HASH160
-		script[2] == 0x14 && // OP_DATA_20
-		script[23] == 0x88 && // OP_EQUALVERIFY
-		script[24] == 0xac && // OP_CHECKSIG
-		script[25] == 0x20 && // OP_DATA_32
-		script[len(script) - 1] == 0xb4 { // OP_CHECKBLOCKATHEIGHT
-
-		return script[3:23]
-	}
-
-	return nil
-}
-
-// extractPubKeyHashWithBlock extracts the public key hash from the passed script if it
-// is a standard pay-to-script-hash script with bip115. It will return nil otherwise.
-func extractScriptHashWithBlock(script []byte) []byte {
-	// A pay-to-script-hash script is of the form:
-	//  OP_HASH160 <20-byte scripthash> OP_EQUAL
-	if len(script) > 57 &&
-		script[0] == 0xa9 && // OP_HASH160
-		script[1] == 0x14 && // OP_DATA_20
-		script[22] == 0x87 && //OP_EQUAL
-		script[23] == 0x20 && // OP_DATA_32
-		script[len(script) - 1] == 0xb4 { // OP_CHECKBLOCKATHEIGHT
-
-		return script[2:22]
-	}
-
-	return nil
+	return nil, nil
 }
